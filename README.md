@@ -1,1 +1,1 @@
-# Technical-Analysis Data and Algorithms
+# Technical Analysis Data and Algorithms
