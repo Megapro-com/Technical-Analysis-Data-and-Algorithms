@@ -118,8 +118,8 @@ df_to_plot = df.dropna(how='any')
 
 
 # Calculate correlation value
-corr_value = (df_to_plot[[column_1, column_2+'SMA']].dropna(how='any')).corr(method=corr_method).iat[0,1]
-
+corr_values = [(df_to_plot[[column_1, column_2]].dropna(how='any')).corr(method=corr_method).iat[0,1],
+            (df_to_plot[[column_1, column_2+'SMA']].dropna(how='any')).corr(method=corr_method).iat[0,1]]
 
 ### Plot results
 # create a fig of width=10 and length=200
@@ -132,7 +132,7 @@ ax[0].set_ylabel(column_1)
 ax[0].text(0.02, 0.78, 'megapro.com', horizontalalignment='left', color='gray', alpha=0.4,
         verticalalignment='center', rotation=0, fontsize=25, transform=ax[0].transAxes, zorder=0)
 
-ax[0].text(0.02, 0.62, 'Join Discord: eENjUYWrVn', horizontalalignment='left', color='gray', alpha=0.4,
+ax[0].text(0.02, 0.62, 'Join Discord: mCmMjSRuBn', horizontalalignment='left', color='gray', alpha=0.4,
         verticalalignment='center', rotation=0, fontsize=25, transform=ax[0].transAxes, zorder=0)
 
 if not label_1:
@@ -149,13 +149,15 @@ def plot_data_panel(inx, label, col, corr_value):
     ax[inx].plot(df_to_plot.index, df_to_plot[col], color='orange', label=label_1)
     ax[inx].text(0.2, 0.9, '%s: %.4f' % (label_1, df_to_plot[col].iat[-1]), 
             horizontalalignment='left', color='black', verticalalignment='center', fontsize=10, transform=ax[inx].transAxes)
+    ax[inx].text(0.9, 0.9, 'Correlation: %.4f' % corr_values[0], 
+            horizontalalignment='right', color='orange', verticalalignment='center', fontsize=15, transform=ax[inx].transAxes)           
     if SmoothPeriod > 1:
         label_2 = label_1 + ' SMA %d' % SmoothPeriod
         ax[inx].plot(df_to_plot.index, df_to_plot[col+'SMA'], color='magenta', label=label_2)
         ax[inx].text(0.4, 0.9, '%s: %.4f' % (label_2, df_to_plot[col+'SMA'].iat[-1]), 
                 horizontalalignment='left', color='black', verticalalignment='center', fontsize=10, transform=ax[inx].transAxes)
-    ax[inx].text(0.9, 0.78, 'Correlation: %.4f' % corr_value, 
-            horizontalalignment='center', color='black', verticalalignment='center', fontsize=15, transform=ax[inx].transAxes)       
+        ax[inx].text(0.9, 0.8, '%.4f' % corr_values[1], 
+                horizontalalignment='right', color='magenta', verticalalignment='center', fontsize=15, transform=ax[inx].transAxes)       
     return
       
 inx = 1
