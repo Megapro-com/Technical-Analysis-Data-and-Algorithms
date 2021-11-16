@@ -5,3 +5,6 @@ Megapro’s GitHub repos are intended for informational purposes only. It is not
 (a) This repo or any other material produced by Megapro is not an offering, solicitation, or prospectus of any kind.  
 (b) Megapro is exempted from any direct or indirect liability to the maximum extent of the law.  
 (c) You are aware of risks in the financial investment and are able to bear potential losses in full.  
+
+Here is a list of level 1 data that you can utilize to build TA based quant trading systems:  
+https://www.cybercon.com/stocks-options-futures-and-crypto-uptodate-data
