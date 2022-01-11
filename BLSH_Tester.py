@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
 import os
 import sys
 import pandas as pd
@@ -20,17 +17,12 @@ stock_label = 'SPY'
 start_date = '2020-01-01'
 end_date = '2022-01-01'
 risk_free_rate = 1.5 # 10 Year Treasury Rate Percentage
-Sell_High = 0.663
-Buy_Low = 0.417
-#data_collection = 'TA_Daily'
-data_collection = 'SA_CBOE_EquityPC' 
-data_column = 'PCRatio'
-data_label = 'Equity PCRatio'
-data_match = {} #{'symbol': 'SPY'}
-
-
-# In[2]:
-
+Sell_High = 70
+Buy_Low = 30
+data_collection = 'TA_Daily'
+data_column = 'RSI'
+data_label = 'RSI'
+data_match = {'symbol': 'SPY'}
 
 # import kline data
 def get_kline(collection, match, start='', stop=''):
@@ -58,9 +50,6 @@ kline = get_kline(stock_collection, stock_match, modified_start, end_date)
 print(kline)
 
 
-# In[3]:
-
-
 # get indicator from database
 def get_indicator(collection, column, match, start='', stop=''):
     date_query = {}
@@ -82,9 +71,6 @@ kline['data'] = get_indicator(data_collection, data_column, data_match,
 
 kline = kline[(kline.index >= start_date)&(kline.index <= end_date)]
 print(kline)
-
-
-# In[4]:
 
 
 long_trades = pd.DataFrame()
@@ -134,10 +120,6 @@ if not long_trades.empty:
     if long_trades['side'].iat[-1] == 'buy':
         long_trades.drop(long_trades.tail(1).index, inplace=True)
 
-
-# In[5]:
-
-
 def timediff2str(timediff):
     timediff = str(timediff).replace(' days, ', ':').replace(' day, ', ':').replace(' days ', ':')
     timediff_list = [float(i) for i in timediff.split(':')]
@@ -150,13 +132,13 @@ def aggregate_trades(df, position):
     for i in range(len(df)):
         line = df.iloc[i]
         index = df.index[i]
-        if not holded and ((line['side'] == 'buy' and position == 'long') or                (line['side'] == 'sell' and position == 'short')):
+        if not holded and ((line['side'] == 'buy' and position == 'long') or (line['side'] == 'sell' and position == 'short')):
             holded = True
             record['OpenTime'] = index
             record['OpenPrice'] = round(line['price'], 2)
             record['OpenAmt'] = round(line['price'] * line['quantity'], 2)
             record['Qty'] = round(line['quantity'], 0)
-        if holded and ((line['side'] == 'sell' and position == 'long') or                (line['side'] == 'buy' and position == 'short')):
+        if holded and ((line['side'] == 'sell' and position == 'long') or (line['side'] == 'buy' and position == 'short')):
             holded = False
             record['CloseTime'] = index
             record['ClosePrice'] = round(line['price'], 2)
@@ -184,10 +166,6 @@ all_trades = aggregate_trades(long_trades, 'long')
 if all_trades is not None:
     all_trades.sort_values(by=['OpenTime'], inplace=True)
     all_trades.reset_index(drop=True, inplace=True)
-
-
-# In[6]:
-
 
 if all_trades is None:
     print('No Trades Found')
@@ -239,13 +217,6 @@ else:
     with open(filename2, 'w') as fp:
         fp.write(df_to_print.to_html() + "\n\n" + df_summary.to_html())
 
-    print('https://jbook2.megagurus.net/user/luckystar/view/%s' % filename)
-    print('https://jbook2.megagurus.net/user/luckystar/view/%s' % filename2)
-
-
-# In[7]:
-
-
 # send trading signals to discord channel
 from webcord import Webhook
 
@@ -259,10 +230,5 @@ for i in range(len(long_trades)):
     #discord_client.send_message(message, 'BLSH Strategy Tester')
     messages += message + '\n'
 print(messages)
-
-
-# In[ ]:
-
-
 
 
